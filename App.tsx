@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Dimensions } from 'react-native';
 import {
   FlatList,
@@ -16,7 +16,6 @@ import Animated, {
   Clock,
   clockRunning,
   cond,
-  debug,
   Easing,
   eq,
   Extrapolate,
@@ -28,6 +27,8 @@ import Animated, {
   timing,
   useCode,
 } from 'react-native-reanimated';
+
+import { scale, PROTOTYPE_DIMENSIONS } from './utils';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -64,6 +65,35 @@ const runProgress = (clock: Clock) => {
   ]);
 };
 
+const ICON_MENU_SIZE = scale({
+  origin_size: PROTOTYPE_DIMENSIONS.width,
+  destination_size: width,
+  size: 45,
+});
+
+const ICON_CLOSE_SIZE = scale({
+  origin_size: PROTOTYPE_DIMENSIONS.width,
+  destination_size: width,
+  size: 58,
+});
+
+const INITIAL_SIZE = scale({
+  origin_size: PROTOTYPE_DIMENSIONS.width,
+  destination_size: width,
+  size: 70,
+});
+
+const MIDDLE_SIZE = scale({
+  origin_size: PROTOTYPE_DIMENSIONS.width,
+  destination_size: width,
+  size: 100,
+});
+
+const INITIAL_BORDER_RADIUS = INITIAL_SIZE / 2;
+const MIDDLE_BORDER_RADIUS = MIDDLE_SIZE / 2;
+const INITIAL_LEFT = width / 2 - INITIAL_SIZE / 2;
+const MIDDLE_LEFT = width / 2 - MIDDLE_SIZE / 2;
+
 export default function App() {
   const [isModalVisible, setIsModalVisible] = useState(0);
 
@@ -73,25 +103,25 @@ export default function App() {
 
   const animatedHeight = interpolate(progress, {
     inputRange: [0, 0.7, 1],
-    outputRange: [70, 100, height],
+    outputRange: [INITIAL_SIZE, MIDDLE_SIZE, height],
     extrapolate: Extrapolate.CLAMP,
   });
 
   const animatedWidth = interpolate(progress, {
     inputRange: [0, 0.7, 1],
-    outputRange: [70, 100, width],
+    outputRange: [INITIAL_SIZE, MIDDLE_SIZE, width],
     extrapolate: Extrapolate.CLAMP,
   });
 
   const animatedLeft = interpolate(progress, {
     inputRange: [0, 0.7, 1],
-    outputRange: [width / 2 - 70 / 2, width / 2 - 100 / 2, 0],
+    outputRange: [INITIAL_LEFT, MIDDLE_LEFT, 0],
     extrapolate: Extrapolate.CLAMP,
   });
 
   const animatedBorderRadius = interpolate(progress, {
     inputRange: [0, 0.7, 1],
-    outputRange: [35, 100, 0],
+    outputRange: [INITIAL_BORDER_RADIUS, MIDDLE_BORDER_RADIUS, 0],
     extrapolate: Extrapolate.CLAMP,
   });
 
@@ -136,7 +166,7 @@ export default function App() {
                 style={{ margin: 10 }}
                 key={index}
                 name="facebook-square"
-                size={58}
+                size={ICON_CLOSE_SIZE}
                 color="#171717"
               />
             )}
@@ -151,20 +181,20 @@ export default function App() {
       <TouchableOpacity
         onPress={() => setIsModalVisible(isModalVisible ? 0 : 1)}
         style={{
-          height: 70,
-          width: 70,
-          borderRadius: 35,
+          height: INITIAL_SIZE,
+          width: INITIAL_SIZE,
+          borderRadius: INITIAL_BORDER_RADIUS,
           backgroundColor: '#f8f8f8',
         }}
       >
         <MaterialIcons
           style={{
             position: 'absolute',
-            left: 70 / 2 - 45 / 2,
-            top: 70 / 2 - 45 / 2,
+            left: INITIAL_SIZE / 2 - ICON_MENU_SIZE / 2,
+            top: INITIAL_SIZE / 2 - ICON_MENU_SIZE / 2,
           }}
           name="menu"
-          size={45}
+          size={ICON_MENU_SIZE}
           color="black"
         />
       </TouchableOpacity>
@@ -184,11 +214,11 @@ const styles = StyleSheet.create({
   },
   modal_wrapper: {
     backgroundColor: '#fff',
-    height: 70,
-    width: 70,
-    borderRadius: 35,
+    height: INITIAL_SIZE,
+    width: INITIAL_SIZE,
+    borderRadius: INITIAL_BORDER_RADIUS,
     position: 'absolute',
-    left: width / 2 - 70 / 2,
+    left: INITIAL_LEFT,
     bottom: 25,
   },
 });
