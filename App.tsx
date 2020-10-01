@@ -74,6 +74,12 @@ const ICON_MENU_SIZE = scale({
 const ICON_CLOSE_SIZE = scale({
   origin_size: PROTOTYPE_DIMENSIONS.width,
   destination_size: width,
+  size: 24,
+});
+
+const ICON_FACE_SIZE = scale({
+  origin_size: PROTOTYPE_DIMENSIONS.width,
+  destination_size: width,
   size: 58,
 });
 
@@ -156,7 +162,11 @@ export default function App() {
               padding: 25,
             }}
           >
-            <AntDesign name="closecircle" size={24} color="black" />
+            <AntDesign
+              name="closecircle"
+              size={ICON_CLOSE_SIZE}
+              color="black"
+            />
           </TouchableOpacity>
           <FlatList
             keyExtractor={(item, index) => index.toString()}
@@ -166,7 +176,7 @@ export default function App() {
                 style={{ margin: 10 }}
                 key={index}
                 name="facebook-square"
-                size={ICON_CLOSE_SIZE}
+                size={ICON_FACE_SIZE}
                 color="#171717"
               />
             )}
